@@ -1,13 +1,11 @@
 from pytube import YouTube
-
 from tkinter import *
 from tkinter import filedialog
 from io import BytesIO
 import requests
-import subprocess
-import time
+import os
+from moviepy.editor import *
 from PIL import ImageTk, Image
-from ffmpeg import *
 
 path = ""
 
@@ -36,21 +34,25 @@ def download_video():
 
 def download_audio():
     try:
+        global stram
         b2.config(text="Please wait...")
         b2.config(state=DISABLED)
-        stream = yt.streams.filter(only_audio = True)
+        stream = yt.streams.filter(progressive=True)
         path = filedialog.askdirectory()
         if path == None:
             return
+        print(stream)
         stream[0].download(path)
-        #time.sleep(1)
-        #mp4 = f'{yt.title}.mp4'
-        #mp3 = f'{yt.title}.mp3'
-        #ffmpeg = ('ffmpeg -i %s' % mp4 + mp3)
-        #subprocess.call(ffmpeg,shell=True)
+        for i in os.listdir(path):
+            os.rename(os.path.join(path,i),os.path.join(path,i.replace(' ','_')))
+        title = yt.title.replace(' ','_')
+        video = VideoFileClip(os.path.join(path+"/"+title+".mp4"))
+        video.audio.write_audiofile(os.path.join(path+"/"+title+".mp3"))
 
         l3 = Label(action,text="Download Complete",font=("Calibri",12),fg = "green").pack()
         b2.config(text="Download Audio")
+        if os.path(f'{title}.mp4'):
+            os.remove(f'{title}.mp4')
     except Exception as e:
         print(e)
         l3 = Label(action,text="Error occured while Downloading",font=("Calibri",12),fg = "red").pack()
@@ -107,7 +109,7 @@ Label(root,text="").pack()
 Label(root,text="").pack()
 Label(root,text="Enter Youtube Link : ",fg="gray26",font=("Calibri",16,"bold")).pack()
 link = StringVar()
-link_entry = Entry(root,textvariable = link,width="60")
+link_entry = Entry(root,textvariable = link,width="70")
 link_entry.pack()
 Label(root,text="").pack()
 
