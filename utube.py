@@ -41,7 +41,6 @@ def download_audio():
         path = filedialog.askdirectory()
         if path == None:
             return
-        print(stream)
         stream[0].download(path)
         for i in os.listdir(path):
             os.rename(os.path.join(path,i),os.path.join(path,i.replace(' ','_')))
@@ -51,10 +50,12 @@ def download_audio():
 
         l3 = Label(action,text="Download Complete",font=("Calibri",12),fg = "green").pack()
         b2.config(text="Download Audio")
-        if os.path(f'{title}.mp4'):
-            os.remove(f'{title}.mp4')
+        try:
+            file = str(f'{title}.mp4')
+            os.remove(os.path.join(path,file))
+        except Exception as e:
+            print(e)
     except Exception as e:
-        print(e)
         l3 = Label(action,text="Error occured while Downloading",font=("Calibri",12),fg = "red").pack()
 
 def search_vid():
@@ -67,6 +68,8 @@ def search_vid():
     action = Frame(root)
     action.pack(expand="yes",fill="both")
     url = link.get()
+    if url == "":
+        return
     try:
         yt = YouTube(url)
     except:
