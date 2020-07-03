@@ -50,6 +50,7 @@ def download_audio():
 
         l3 = Label(action,text="Download Complete",font=("Calibri",12),fg = "green").pack()
         b2.config(text="Download Audio")
+        video.close()
         try:
             file = str(f'{title}.mp4')
             os.remove(os.path.join(path,file))
