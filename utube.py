@@ -79,7 +79,7 @@ def search_vid():
         l1 = Label(root,text="An Error Occured",font=("Calibri",12))
         l1.pack()
 
-    Label(action,text="").pack()
+#     Label(action,text="").pack()
     response = requests.get(yt.thumbnail_url)
     image = Image.open(BytesIO(response.content))
     image = image.resize((150,105),Image.ANTIALIAS)
